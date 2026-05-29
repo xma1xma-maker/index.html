@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>أبو حرير لتقييم المطاعم</title>
+    
+    <!-- إضافة مكتبة AdsGram -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap' );
 
         * {
             box-sizing: border-box;
@@ -53,60 +57,54 @@
 
         /* أبعاد مضمونة لا تنهار أبداً تحت أي ظرف داخل تطبيقات تليجرام */
         #game-container {
-    position: relative;
-    width: 92%;
-    max-width: 500px;
-
-    /* 🔥 حل مرن فعلي لكل الأجهزة */
-    height: 100%;
-
-    /* يمنع التمدد الزائد */
-    flex: 1;
-
-    min-height: 320px;
-    max-height: none;
-
-    background: linear-gradient(to bottom, #1f0b00, #3a0000);
-    border: 3px solid #ff6600;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 0 25px rgba(255, 102, 0, 0.4);
-}
+            position: relative;
+            width: 92%;
+            max-width: 500px;
+            height: 100%;
+            flex: 1;
+            min-height: 320px;
+            max-height: none;
+            background: linear-gradient(to bottom, #1f0b00, #3a0000);
+            border: 3px solid #ff6600;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(255, 102, 0, 0.4);
+        }
         canvas {
             display: block;
             width: 100%;
             height: 100%;
         }
         /* 🔥 إعلان 500 تقييم */
-.top-ad{
-    width: 92%;
-    max-width: 500px;
-    background: linear-gradient(90deg,#ff6600,#ffcc00,#ff6600);
-    background-size: 300% 300%;
-    animation: adMove 4s infinite linear;
-    padding: 12px 14px;
-    margin: 8px auto 10px auto;
-    border-radius: 14px;
-    text-align: center;
-    font-weight: 900;
-    color: #111;
-    box-shadow: 0 0 18px rgba(255,140,0,0.5);
-    border: 2px solid rgba(255,255,255,0.15);
-}
+        .top-ad{
+            width: 92%;
+            max-width: 500px;
+            background: linear-gradient(90deg,#ff6600,#ffcc00,#ff6600);
+            background-size: 300% 300%;
+            animation: adMove 4s infinite linear;
+            padding: 12px 14px;
+            margin: 8px auto 10px auto;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 900;
+            color: #111;
+            box-shadow: 0 0 18px rgba(255,140,0,0.5);
+            border: 2px solid rgba(255,255,255,0.15);
+        }
 
-.top-ad span{
-    background: #ff0000;
-    color: #fff;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin: 0 4px;
-    display: inline-block;
-}
+        .top-ad span{
+            background: #ff0000;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin: 0 4px;
+            display: inline-block;
+        }
 
-@keyframes adMove{
-    0%{background-position:0% 50%;}
-    100%{background-position:300% 50%;}
-}
+        @keyframes adMove{
+            0%{background-position:0% 50%;}
+            100%{background-position:300% 50%;}
+        }
 
         /* الطبقات الشفافة فوق اللعبة */
         .ui-overlay {
@@ -287,9 +285,9 @@
 
     <div class="header">
         <!-- 🔥 إعلان علوي -->
-<div class="top-ad">
-    🎁 إذا جمعت <span>500 تقييم</span> راح تربح معنا جوائز وهدايا حقيقية 🔥
-</div>
+        <div class="top-ad">
+            🎁 إذا جمعت <span>500 تقييم</span> راح تربح معنا جوائز وهدايا حقيقية 🔥
+        </div>
         <h1>🔥 هروب أبو حرير 🔥</h1>
     </div>
 
@@ -355,6 +353,25 @@
     </div>
 
     <script>
+        // تهيئة AdsGram
+        const AdController = window.Adsgram ? window.Adsgram.init({ blockId: "int-33446" } ) : null;
+
+        // دالة مساعدة لعرض الإعلان ثم تنفيذ أمر معين (مثل إظهار شاشة الخسارة أو النافذة)
+        function showAdThen(callback) {
+            if (AdController) {
+                AdController.show().then((result) => {
+                    // المستخدم شاهد الإعلان أو أغلقه
+                    callback();
+                }).catch((result) => {
+                    // حدث خطأ أثناء عرض الإعلان (مثل عدم توفر إعلانات)
+                    callback();
+                });
+            } else {
+                // في حال لم يتم تحميل مكتبة الإعلانات
+                callback();
+            }
+        }
+
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         
@@ -367,7 +384,7 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // نظام الحالات للعبة: 'START', 'PLAYING', 'PAUSED', 'GAMEOVER'
+        // نظام الحالات للعبة: 'START', 'PLAYING', 'PAUSED', 'GAMEOVER', 'WAITING_AD'
         let gameState = 'START';
         
         let score = 0;
@@ -483,7 +500,11 @@
         }
 
         function gameOver() {
-            setScreen('GAMEOVER');
+            // إيقاف اللعبة مؤقتاً لعرض الإعلان قبل شاشة الخسارة
+            gameState = 'WAITING_AD'; 
+            showAdThen(() => {
+                setScreen('GAMEOVER');
+            });
         }
 
         function spawnObstacle() {
@@ -542,7 +563,7 @@
                     player.x + player.width - hitPadding > obs.x + hitPadding &&
                     player.y + hitPadding < obs.y + obs.height - hitPadding &&
                     player.y + player.height - hitPadding > obs.y + hitPadding) {
-                    gameOver();
+                    gameOver(); // هنا سيتم استدعاء دالة الخسارة التي تعرض الإعلان أولاً
                 }
 
                 if (obs.x + obs.width < -50) obstacles.splice(i, 1);
@@ -653,7 +674,7 @@
             }
         }
 
-        // --- نظام النوافذ المنبثقة المرن مع الإيقاف والاستئناف ---
+        // --- نظام النوافذ المنبثقة المرن مع الإيقاف والاستئناف وعرض الإعلانات ---
         
         document.getElementById('startBtn').addEventListener('click', startGame);
         document.getElementById('restartBtn').addEventListener('click', startGame);
@@ -669,8 +690,11 @@
         
         function openModal(id) {
             pauseGame(); 
-            document.getElementById(id).classList.remove('hidden');
-            backdrop.classList.remove('hidden');
+            // عرض الإعلان قبل فتح نافذة المهمات أو التواصل
+            showAdThen(() => {
+                document.getElementById(id).classList.remove('hidden');
+                backdrop.classList.remove('hidden');
+            });
         }
 
         function closeModal(id) {
