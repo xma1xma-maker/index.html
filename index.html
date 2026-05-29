@@ -14,7 +14,7 @@
 
         /* قفل الارتفاع لضمان عدم انهيار الـ Flexbox داخل تليجرام */
         html, body {
-            height: 100%;
+            height: 100dvh;
             margin: 0;
             padding: 0;
             background-color: #0d0d0d;
@@ -57,11 +57,13 @@
     width: 92%;
     max-width: 500px;
 
-    /* 🔥 أهم تعديل: توسع تلقائي حسب الشاشة */
-    height: calc(100vh - 140px);
+    /* 🔥 حل مرن فعلي لكل الأجهزة */
+    height: 100%;
 
-    /* يمنع الانهيار ويخليها مرنة */
-    min-height: 300px;
+    /* يمنع التمدد الزائد */
+    flex: 1;
+
+    min-height: 320px;
     max-height: none;
 
     background: linear-gradient(to bottom, #1f0b00, #3a0000);
@@ -69,7 +71,6 @@
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 0 25px rgba(255, 102, 0, 0.4);
-    flex-shrink: 0;
 }
         canvas {
             display: block;
