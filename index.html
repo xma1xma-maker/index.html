@@ -466,7 +466,8 @@
             resizeCanvas();
             score = 0;
             frame = 0;
-            gameSpeed = 4.2 + (canvas.width / 1400); 
+            // تم تقليل السرعة الابتدائية من 4.2 إلى 2.8
+            gameSpeed = 2.8 + (canvas.width / 1400); 
             obstacles = [];
             stars = [];
             
@@ -548,7 +549,8 @@
             // حركة الطباخ
             chaser.y = groundY - chaser.height - (frame % 16 < 8 ? 5 : 0);
 
-            let spawnRate = Math.max(70, 120 - Math.floor(score * 2.5));
+            // تم إبطاء معدل ظهور العقبات لتناسب السرعة الجديدة
+            let spawnRate = Math.max(90, 150 - Math.floor(score * 2.0));
             if (frame % spawnRate === 0) spawnObstacle();
             
             if (frame % 140 === 0 && Math.random() > 0.2) spawnStar();
@@ -584,7 +586,8 @@
                     document.getElementById('score').innerText = score;
                     stars.splice(i, 1); 
                     
-                    if(score % 5 === 0) gameSpeed += 0.35; 
+                    // تم تقليل مقدار زيادة السرعة من 0.35 إلى 0.15 لكي لا تسرع اللعبة بشكل مفاجئ
+                    if(score % 5 === 0) gameSpeed += 0.15; 
                     
                 } else if (star.x + star.width < -50) {
                     stars.splice(i, 1);
