@@ -338,8 +338,6 @@ canvas{
 
 </div>
 
-<!-- BUTTONS -->
-
 <div class="controls">
 
 <button class="action-btn" id="missionsBtn">
@@ -351,8 +349,6 @@ canvas{
 </button>
 
 </div>
-
-<!-- MODALS -->
 
 <div id="modal-backdrop" class="modal-overlay hidden"></div>
 
@@ -402,9 +398,7 @@ canvas{
 
 <script>
 
-/* ======================
-   ADSGRAM
-====================== */
+/* ADSGRAM */
 
 const AdController = window.Adsgram.init({
     blockId: "int-33446"
@@ -414,19 +408,15 @@ function showAd(callback=null){
 
     AdController.show()
     .then(() => {
-        console.log("Ad watched");
         if(callback) callback();
     })
-    .catch((e) => {
-        console.log("Ad error", e);
+    .catch(() => {
         if(callback) callback();
     });
 
 }
 
-/* ======================
-   GAME
-====================== */
+/* GAME */
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -449,7 +439,8 @@ let gameState = 'START';
 let score = 0;
 let frame = 0;
 
-let gameSpeed = 5;
+/* 🔥 تم تقليل السرعة */
+let gameSpeed = 3.2;
 
 let obstacles = [];
 let stars = [];
@@ -457,44 +448,30 @@ let stars = [];
 let animationId;
 
 const player = {
-
     x:0,
     y:0,
     width:48,
     height:48,
-
     dy:0,
-
     gravity:0.7,
     jumpPower:-13,
-
     isGrounded:false,
-
     emoji:'🏃🏻‍♂️'
-
 };
 
 const chaser = {
-
     x:18,
     y:0,
-
     width:52,
     height:52,
-
     emoji:'👨🏻‍🍳'
-
 };
 
 function getGroundY(){
     return canvas.height - 40;
 }
 
-/* ======================
-   JUMP
-====================== */
-
-function jump(e){
+function jump(){
 
     if(gameState === 'PLAYING' && player.isGrounded){
 
@@ -518,10 +495,6 @@ window.addEventListener('keydown',(e)=>{
     }
 
 });
-
-/* ======================
-   SCREENS
-====================== */
 
 function setScreen(state){
 
@@ -549,10 +522,6 @@ function setScreen(state){
 
 }
 
-/* ======================
-   INIT
-====================== */
-
 function initGame(){
 
     resizeCanvas();
@@ -560,7 +529,8 @@ function initGame(){
     score = 0;
     frame = 0;
 
-    gameSpeed = 4.5;
+    /* 🔥 سرعة بداية أبطأ */
+    gameSpeed = 3.2;
 
     obstacles = [];
     stars = [];
@@ -577,10 +547,6 @@ function initGame(){
 
 }
 
-/* ======================
-   START
-====================== */
-
 function startGame(){
 
     setScreen('PLAYING');
@@ -595,16 +561,10 @@ function startGame(){
 
 }
 
-/* ======================
-   PAUSE
-====================== */
-
 function pauseGame(){
 
     if(gameState === 'PLAYING'){
-
         setScreen('PAUSED');
-
     }
 
 }
@@ -621,10 +581,6 @@ function resumeGame(){
 
 }
 
-/* ======================
-   GAME OVER
-====================== */
-
 function gameOver(){
 
     setScreen('GAMEOVER');
@@ -637,10 +593,6 @@ function gameOver(){
 
 }
 
-/* ======================
-   SPAWN
-====================== */
-
 function spawnObstacle(){
 
     const types = ['🪑','🗑️','🍔','🔥'];
@@ -651,10 +603,8 @@ function spawnObstacle(){
 
         x:canvas.width + 50,
         y:getGroundY() - size + 5,
-
         width:size,
         height:size,
-
         emoji:types[Math.floor(Math.random()*types.length)]
 
     });
@@ -667,19 +617,13 @@ function spawnStar(){
 
         x:canvas.width + 50,
         y:getGroundY() - Math.random()*90 - 50,
-
         width:28,
         height:28,
-
         emoji:'⭐'
 
     });
 
 }
-
-/* ======================
-   UPDATE
-====================== */
 
 function update(){
 
@@ -703,17 +647,15 @@ function update(){
 
     chaser.y = groundY - chaser.height;
 
-    let spawnRate = Math.max(70,120 - Math.floor(score * 2));
+    let spawnRate = Math.max(80,130 - Math.floor(score * 1.5));
 
     if(frame % spawnRate === 0){
         spawnObstacle();
     }
 
-    if(frame % 140 === 0){
+    if(frame % 150 === 0){
         spawnStar();
     }
-
-    /* OBSTACLES */
 
     for(let i = obstacles.length - 1; i >= 0; i--){
 
@@ -742,8 +684,6 @@ function update(){
 
     }
 
-    /* STARS */
-
     for(let i = stars.length - 1; i >= 0; i--){
 
         let star = stars[i];
@@ -765,12 +705,12 @@ function update(){
 
             stars.splice(i,1);
 
-            /* SPEED SYSTEM */
+            /* 🔥 زيادة سرعة أخف */
+            gameSpeed = 3.2 + (score * 0.04);
 
-            gameSpeed = 4.5 + (score * 0.08);
-
-            if(gameSpeed > 13){
-                gameSpeed = 13;
+            /* 🔥 حد أقصى أبطأ */
+            if(gameSpeed > 8){
+                gameSpeed = 8;
             }
 
         }
@@ -786,10 +726,6 @@ function update(){
     frame++;
 
 }
-
-/* ======================
-   DRAW
-====================== */
 
 function draw(){
 
@@ -808,67 +744,47 @@ function draw(){
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    /* CHASER */
-
     ctx.font = `${chaser.width}px Arial`;
 
     ctx.fillText(
-
         chaser.emoji,
         chaser.x + chaser.width/2,
         chaser.y + chaser.height/2
-
     );
-
-    /* PLAYER */
 
     ctx.font = `${player.width}px Arial`;
 
     ctx.fillText(
-
         player.emoji,
         player.x + player.width/2,
         player.y + player.height/2
-
     );
-
-    /* OBSTACLES */
 
     for(let obs of obstacles){
 
         ctx.font = `${obs.width}px Arial`;
 
         ctx.fillText(
-
             obs.emoji,
             obs.x + obs.width/2,
             obs.y + obs.height/2
-
         );
 
     }
-
-    /* STARS */
 
     for(let star of stars){
 
         ctx.font = `${star.width}px Arial`;
 
         ctx.fillText(
-
             star.emoji,
             star.x + star.width/2,
             star.y + star.height/2
-
         );
 
     }
 
 }
-
-/* ======================
-   LOOP
-====================== */
 
 function gameLoop(){
 
@@ -883,10 +799,6 @@ function gameLoop(){
 
 }
 
-/* ======================
-   BUTTONS
-====================== */
-
 document.getElementById('startBtn').addEventListener('click',startGame);
 
 document.getElementById('restartBtn').addEventListener('click',startGame);
@@ -896,10 +808,6 @@ document.getElementById('resumeBtn').addEventListener('click',resumeGame);
 document.getElementById('restartFromPauseBtn').addEventListener('click',startGame);
 
 document.getElementById('pauseBtn').addEventListener('click',pauseGame);
-
-/* ======================
-   MODALS
-====================== */
 
 const backdrop = document.getElementById('modal-backdrop');
 
@@ -921,8 +829,6 @@ function closeModal(id){
 
 }
 
-/* مهمات + إعلان */
-
 document.getElementById('missionsBtn').addEventListener('click',()=>{
 
     showAd(() => {
@@ -932,8 +838,6 @@ document.getElementById('missionsBtn').addEventListener('click',()=>{
     });
 
 });
-
-/* تواصل + إعلان */
 
 document.getElementById('contactBtn').addEventListener('click',()=>{
 
@@ -966,8 +870,6 @@ backdrop.addEventListener('click',()=>{
     backdrop.classList.add('hidden');
 
 });
-
-/* INIT */
 
 setTimeout(() => {
 
