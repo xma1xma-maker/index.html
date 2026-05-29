@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>أبو حرير لتقييم المطاعم</title>
+    <!-- 🔥 إضافة سكريبت AdsGram -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap');
 
@@ -281,6 +283,33 @@
             background: rgba(0,0,0,0.85);
             z-index: 90;
         }
+
+        /* إشعار الإعلان */
+        .ad-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff6600, #ffcc00);
+            color: #111;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 200;
+            box-shadow: 0 5px 20px rgba(255, 102, 0, 0.5);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -355,6 +384,65 @@
     </div>
 
     <script>
+        // ============================================
+        // 🔥 تهيئة AdsGram SDK
+        // ============================================
+        let AdController = null;
+
+        window.addEventListener('load', function() {
+            try {
+                AdController = window.Adsgram.init({ blockId: "int-33446" });
+                console.log("✅ تم تهيئة AdsGram بنجاح");
+                showAdNotification("الإعلانات جاهزة!");
+            } catch (error) {
+                console.log("⚠️ تنبيه: AdsGram غير متوفر (قد تكون خارج Telegram Mini App)");
+            }
+        });
+
+        // ============================================
+        // دالة عرض الإعلان
+        // ============================================
+        function showAdsGramAd(adType = "عام") {
+            return new Promise((resolve) => {
+                if (!AdController) {
+                    console.log(`⚠️ AdsGram غير متاح - محاكاة إعلان: ${adType}`);
+                    showAdNotification(`محاكاة إعلان: ${adType} 🎬`);
+                    setTimeout(() => {
+                        resolve({ done: true, description: "Ad simulated" });
+                    }, 2000);
+                    return;
+                }
+
+                // عرض الإعلان الفعلي
+                AdController.show()
+                    .then((result) => {
+                        console.log(`✅ تم عرض إعلان ${adType}:`, result);
+                        if (result.done) {
+                            showAdNotification(`شكراً على مشاهدة الإعلان! 🎉`);
+                        }
+                        resolve(result);
+                    })
+                    .catch((result) => {
+                        console.error(`❌ خطأ في إعلان ${adType}:`, result);
+                        showAdNotification(`حدث خطأ - حاول مجدداً ⚠️`);
+                        resolve(result);
+                    });
+            });
+        }
+
+        // دالة إظهار الإخطارات
+        function showAdNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'ad-notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         
@@ -482,8 +570,12 @@
             }
         }
 
-        function gameOver() {
+        async function gameOver() {
             setScreen('GAMEOVER');
+            
+            // 🔥 عرض الإعلان عند الخسارة
+            console.log("🎮 اللعبة انتهت - جاري عرض الإعلان...");
+            await showAdsGramAd("إعلان الخسارة");
         }
 
         function spawnObstacle() {
@@ -667,8 +759,18 @@
 
         const backdrop = document.getElementById('modal-backdrop');
         
-        function openModal(id) {
-            pauseGame(); 
+        async function openModal(id) {
+            pauseGame();
+            
+            // 🔥 عرض الإعلان قبل فتح النافذة
+            if (id === 'missions-modal') {
+                console.log("📋 فتح المهمات - جاري عرض الإعلان...");
+                await showAdsGramAd("إعلان المهمات");
+            } else if (id === 'contact-modal') {
+                console.log("💬 فتح التواصل - جاري عرض الإعلان...");
+                await showAdsGramAd("إعلان التواصل");
+            }
+            
             document.getElementById(id).classList.remove('hidden');
             backdrop.classList.remove('hidden');
         }
