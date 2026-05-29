@@ -3,20 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+
     <title>أبو حرير لتقييم المطاعم</title>
-    
-    <!-- إضافة مكتبة AdsGram -->
+
+    <!-- Telegram Mini App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- AdsGram -->
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap' );
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap');
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* قفل الارتفاع لضمان عدم انهيار الـ Flexbox داخل تليجرام */
         html, body {
             height: 100dvh;
             margin: 0;
@@ -45,7 +48,7 @@
             color: #ff9900;
             text-shadow: 0 0 10px #ff0000;
             width: 100%;
-            flex-shrink: 0; /* منع تقلص العنوان */
+            flex-shrink: 0;
         }
 
         .header h1 {
@@ -55,7 +58,6 @@
             letter-spacing: 1px;
         }
 
-        /* أبعاد مضمونة لا تنهار أبداً تحت أي ظرف داخل تطبيقات تليجرام */
         #game-container {
             position: relative;
             width: 92%;
@@ -70,12 +72,13 @@
             overflow: hidden;
             box-shadow: 0 0 25px rgba(255, 102, 0, 0.4);
         }
+
         canvas {
             display: block;
             width: 100%;
             height: 100%;
         }
-        /* 🔥 إعلان 500 تقييم */
+
         .top-ad{
             width: 92%;
             max-width: 500px;
@@ -106,7 +109,6 @@
             100%{background-position:300% 50%;}
         }
 
-        /* الطبقات الشفافة فوق اللعبة */
         .ui-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -140,7 +142,7 @@
         }
 
         .btn-main:active { transform: scale(0.95); }
-        
+
         .btn-secondary {
             background: #2a2a2a;
             border: 2px solid #ff6600;
@@ -156,6 +158,7 @@
             max-width: 250px;
             margin-top: 5px;
         }
+
         .btn-secondary:active { transform: scale(0.95); }
 
         .controls {
@@ -165,7 +168,7 @@
             width: 92%;
             max-width: 500px;
             padding: 10px 0;
-            flex-shrink: 0; /* منع تقلص الأزرار السفلية */
+            flex-shrink: 0;
         }
 
         .action-btn {
@@ -183,8 +186,11 @@
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        
-        .action-btn:active { transform: scale(0.95); background: #2a2a2a; }
+
+        .action-btn:active {
+            transform: scale(0.95);
+            background: #2a2a2a;
+        }
 
         .score-board {
             position: absolute;
@@ -204,7 +210,6 @@
             gap: 5px;
         }
 
-        /* زر إيقاف اللعبة المؤقت في الزاوية */
         .pause-trigger {
             position: absolute;
             top: 12px;
@@ -219,10 +224,10 @@
             font-size: 16px;
         }
 
-        /* تصميم النوافذ المنبثقة */
         .modal {
             position: fixed;
-            top: 50%; left: 50%;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
             background: #141414;
             border: 3px solid #ff6600;
@@ -234,10 +239,21 @@
             max-width: 360px;
             box-shadow: 0 0 35px rgba(0,0,0,0.95);
         }
-        .modal h2 { color: #ffcc00; margin-top: 0; font-size: 24px; font-weight: 900; }
-        .modal p { font-size: 15px; line-height: 1.6; margin-bottom: 15px; color: #ccc;}
-        
-        /* أزرار قنوات السوشيال ميديا */
+
+        .modal h2 {
+            color: #ffcc00;
+            margin-top: 0;
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .modal p {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+
         .social-btn {
             display: block;
             width: 100%;
@@ -253,10 +269,23 @@
             font-family: 'Tajawal', sans-serif;
             text-align: center;
         }
+
         .social-btn:active { transform: scale(0.97); }
-        .btn-tg { background: #0088cc; border: 1px solid #0099e6; }
-        .btn-tt { background: #000000; border: 1px solid #333; }
-        .btn-yt { background: #ff0000; border: 1px solid #cc0000; }
+
+        .btn-tg {
+            background: #0088cc;
+            border: 1px solid #0099e6;
+        }
+
+        .btn-tt {
+            background: #000000;
+            border: 1px solid #333;
+        }
+
+        .btn-yt {
+            background: #ff0000;
+            border: 1px solid #cc0000;
+        }
 
         .close-btn {
             background: #ff3333;
@@ -271,460 +300,561 @@
             cursor: pointer;
             width: 100%;
         }
-        .close-btn:active { background: #cc0000; transform: scale(0.95); }
-        
+
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0,0,0,0.85);
             z-index: 90;
         }
     </style>
 </head>
+
 <body>
 
-    <div class="header">
-        <!-- 🔥 إعلان علوي -->
-        <div class="top-ad">
-            🎁 إذا جمعت <span>500 تقييم</span> راح تربح معنا جوائز وهدايا حقيقية 🔥
-        </div>
-        <h1>🔥 هروب أبو حرير 🔥</h1>
+<div class="header">
+
+    <div class="top-ad">
+        🎁 إذا جمعت <span>500 تقييم</span> راح تربح معنا جوائز وهدايا حقيقية 🔥
     </div>
 
-    <div id="game-container">
-        <!-- عداد التقييم -->
-        <div class="score-board">التقييم: <span id="score">0</span> ⭐</div>
-        
-        <!-- زر الإيقاف المؤقت -->
-        <button class="pause-trigger" id="pauseBtn">⏸️</button>
-        
-        <!-- شاشة البداية -->
-        <div id="start-screen" class="ui-overlay">
-            <h2 style="color: #ff9900; font-size: 26px; margin: 0 0 10px 0; font-weight: 900;">راعي المطعم يلحقك!</h2>
-            <p style="color: #eee; font-size: 15px; margin: 0 0 20px 0; line-height: 1.5;">اقفز فوق المطبات الكراسي والأكل الفاسد واجمع النجوم لرفع التقييم!</p>
-            <button class="btn-main" id="startBtn">ابدأ اللعب 🏃‍♂️</button>
-        </div>
+    <h1>🔥 هروب أبو حرير 🔥</h1>
+</div>
 
-        <!-- شاشة الإيقاف المؤقت -->
-        <div id="pause-screen" class="ui-overlay hidden">
-            <h2 style="color: #ffcc00; font-size: 26px; margin: 0 0 15px 0;">اللعبة متوقفة</h2>
-            <p style="color: #ccc; margin: 0 0 20px 0;">أبو حرير يأخذ قسطاً من الراحة!</p>
-            <button class="btn-main" id="resumeBtn">استئناف اللعب ▶️</button>
-            <button class="btn-secondary" id="restartFromPauseBtn">إعادة البدء 🔄</button>
-        </div>
+<div id="game-container">
 
-        <!-- شاشة نهاية اللعبة -->
-        <div id="game-over-screen" class="ui-overlay hidden">
-            <h2 style="color: #ff3333; font-size: 28px; text-shadow: 2px 2px #000; margin-bottom: 5px;">صادك راعي المطعم! 🔪</h2>
-            <p style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">تقييمك النهائي: <span id="final-score" style="color:#ffcc00;">0</span> ⭐</p>
-            <button class="btn-main" id="restartBtn">العب مرة ثانية 🔄</button>
-        </div>
-
-        <canvas id="gameCanvas"></canvas>
+    <div class="score-board">
+        التقييم:
+        <span id="score">0</span> ⭐
     </div>
 
-    <!-- أزرار التحكم السفلية -->
-    <div class="controls">
-        <button class="action-btn" id="missionsBtn">📋 المهمات</button>
-        <button class="action-btn" id="contactBtn">💬 تواصل معي</button>
+    <button class="pause-trigger" id="pauseBtn">⏸️</button>
+
+    <div id="start-screen" class="ui-overlay">
+        <h2 style="color: #ff9900; font-size: 26px;">راعي المطعم يلحقك!</h2>
+
+        <p style="color: #eee;">
+            اقفز فوق المطبات والكراسي والأكل الفاسد واجمع النجوم!
+        </p>
+
+        <button class="btn-main" id="startBtn">
+            ابدأ اللعب 🏃‍♂️
+        </button>
     </div>
 
-    <!-- نوافذ المعلومات المنبثقة -->
-    <div id="modal-backdrop" class="modal-overlay hidden"></div>
+    <div id="pause-screen" class="ui-overlay hidden">
+        <h2 style="color:#ffcc00;">اللعبة متوقفة</h2>
 
-    <div id="missions-modal" class="modal hidden">
-        <h2>مهمات أبو حرير</h2>
-        <p>أكمل المهمات لدعم أبو حرير في تقييماته ضد أصحاب المطاعم الغاضبين:</p>
-        
-        <a href="https://t.me/your_telegram_channel" target="_blank" class="social-btn btn-tg">✈️ اشترك في قناة التليجرام</a>
-        <a href="https://tiktok.com/@your_tiktok" target="_blank" class="social-btn btn-tt">🎵 تابعنا على تيك توك</a>
-        <a href="https://youtube.com/@your_youtube" target="_blank" class="social-btn btn-yt">▶️ اشترك في اليوتيوب</a>
-        
-        <button class="close-btn" data-target="missions-modal">إغلاق وتكملة اللعب</button>
+        <button class="btn-main" id="resumeBtn">
+            استئناف اللعب ▶️
+        </button>
+
+        <button class="btn-secondary" id="restartFromPauseBtn">
+            إعادة البدء 🔄
+        </button>
     </div>
 
-    <div id="contact-modal" class="modal hidden">
-        <h2>تواصل مع أبو حرير</h2>
-        <p>للإعلانات، التقييمات، أو الشكاوى من أصحاب المطاعم المحروقين:</p>
-        
-        <a href="https://t.me/AbuHareer_Bot" target="_blank" class="social-btn btn-tg" style="font-size: 16px;">💬 تحدث معي عبر تليجرام</a>
-        
-        <button class="close-btn" data-target="contact-modal">إغلاق وتكملة اللعب</button>
+    <div id="game-over-screen" class="ui-overlay hidden">
+        <h2 style="color:#ff3333;">صادك راعي المطعم! 🔪</h2>
+
+        <p style="font-size:20px;">
+            تقييمك النهائي:
+            <span id="final-score">0</span> ⭐
+        </p>
+
+        <button class="btn-main" id="restartBtn">
+            العب مرة ثانية 🔄
+        </button>
     </div>
 
-    <script>
-        // تهيئة AdsGram
-        const AdController = window.Adsgram ? window.Adsgram.init({ blockId: "int-33446" } ) : null;
+    <canvas id="gameCanvas"></canvas>
+</div>
 
-        // دالة مساعدة لعرض الإعلان ثم تنفيذ أمر معين (مثل إظهار شاشة الخسارة أو النافذة)
-        function showAdThen(callback) {
-            if (AdController) {
-                AdController.show().then((result) => {
-                    // المستخدم شاهد الإعلان أو أغلقه
-                    callback();
-                }).catch((result) => {
-                    // حدث خطأ أثناء عرض الإعلان (مثل عدم توفر إعلانات)
-                    callback();
-                });
-            } else {
-                // في حال لم يتم تحميل مكتبة الإعلانات
-                callback();
-            }
+<div class="controls">
+    <button class="action-btn" id="missionsBtn">
+        📋 المهمات
+    </button>
+
+    <button class="action-btn" id="contactBtn">
+        💬 تواصل معي
+    </button>
+</div>
+
+<div id="modal-backdrop" class="modal-overlay hidden"></div>
+
+<div id="missions-modal" class="modal hidden">
+
+    <h2>مهمات أبو حرير</h2>
+
+    <p>
+        أكمل المهمات لدعم أبو حرير ضد أصحاب المطاعم الغاضبين
+    </p>
+
+    <a href="https://t.me/abohrbot" target="_blank" class="social-btn btn-tg">
+        ✈️ قناة التليجرام
+    </a>
+
+    <a href="https://tiktok.com" target="_blank" class="social-btn btn-tt">
+        🎵 تيك توك
+    </a>
+
+    <a href="https://youtube.com" target="_blank" class="social-btn btn-yt">
+        ▶️ يوتيوب
+    </a>
+
+    <button class="close-btn" data-target="missions-modal">
+        إغلاق
+    </button>
+
+</div>
+
+<div id="contact-modal" class="modal hidden">
+
+    <h2>تواصل مع أبو حرير</h2>
+
+    <p>
+        للتواصل والإعلانات
+    </p>
+
+    <a href="https://t.me/abohrbot" target="_blank" class="social-btn btn-tg">
+        💬 تحدث معي
+    </a>
+
+    <button class="close-btn" data-target="contact-modal">
+        إغلاق
+    </button>
+
+</div>
+
+<script>
+
+    // Telegram Web App
+    if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.expand();
+        Telegram.WebApp.ready();
+    }
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // ===== AdsGram =====
+    const AdController = window.Adsgram.init({
+        blockId: "int-33446"
+    });
+
+    function showAd(callback = null) {
+
+        AdController.show()
+        .then(() => {
+            console.log("تم عرض الإعلان");
+
+            if (callback) callback();
+        })
+        .catch((err) => {
+
+            console.log("خطأ إعلان", err);
+
+            if (callback) callback();
+        });
+
+    }
+
+    function resizeCanvas() {
+        const container = canvas.parentElement;
+
+        canvas.width = container.clientWidth || 350;
+        canvas.height = container.clientHeight || 300;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    resizeCanvas();
+
+    let gameState = 'START';
+
+    let score = 0;
+    let frame = 0;
+    let gameSpeed = 5;
+    let obstacles = [];
+    let stars = [];
+    let animationId;
+
+    const player = {
+        x: 0,
+        y: 0,
+        width: 48,
+        height: 48,
+        dy: 0,
+        gravity: 0.7,
+        jumpPower: -13,
+        isGrounded: false,
+        emoji: '🏃🏻‍♂️'
+    };
+
+    const chaser = {
+        x: 18,
+        y: 0,
+        width: 52,
+        height: 52,
+        emoji: '👨🏻‍🍳'
+    };
+
+    function getGroundY() {
+        return canvas.height - 40;
+    }
+
+    function jump(e) {
+
+        if (gameState === 'PLAYING' && player.isGrounded) {
+
+            if (e && e.cancelable) e.preventDefault();
+
+            player.dy = player.jumpPower;
+            player.isGrounded = false;
+        }
+    }
+
+    canvas.addEventListener('touchstart', jump, {passive:false});
+    canvas.addEventListener('mousedown', jump);
+
+    function setScreen(state) {
+
+        gameState = state;
+
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('pause-screen').classList.add('hidden');
+        document.getElementById('game-over-screen').classList.add('hidden');
+
+        if (state === 'START') {
+            document.getElementById('start-screen').classList.remove('hidden');
         }
 
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        // إعدادات وتجاوب الكانفاس لضمان عدم وجود أبعاد 0
-        function resizeCanvas() {
-            const container = canvas.parentElement;
-            canvas.width = container.clientWidth || 350;
-            canvas.height = container.clientHeight || 300;
+        else if (state === 'PAUSED') {
+            document.getElementById('pause-screen').classList.remove('hidden');
         }
-        window.addEventListener('resize', resizeCanvas);
+
+        else if (state === 'GAMEOVER') {
+
+            document.getElementById('game-over-screen').classList.remove('hidden');
+
+            document.getElementById('final-score').innerText = score;
+        }
+    }
+
+    function initGame() {
+
         resizeCanvas();
 
-        // نظام الحالات للعبة: 'START', 'PLAYING', 'PAUSED', 'GAMEOVER', 'WAITING_AD'
-        let gameState = 'START';
-        
-        let score = 0;
-        let frame = 0;
-        let gameSpeed = 5;
-        let obstacles = [];
-        let stars = [];
-        let animationId;
+        score = 0;
+        frame = 0;
+        gameSpeed = 4.2;
 
-        // تعديل أبعاد ومكان الشخصية ليكون متناسقاً جداً ومفصولاً عن الطباخ
-        const player = {
-            x: 0, 
-            y: 0, 
-            width: 48, 
-            height: 48,
-            dy: 0, 
-            gravity: 0.7, 
-            jumpPower: -13,
-            isGrounded: false,
-            emoji: '🏃🏻‍♂️'
-        };
+        obstacles = [];
+        stars = [];
 
-        const chaser = {
-            x: 18, 
-            y: 0,
-            width: 52, 
-            height: 52,
-            emoji: '👨🏻‍🍳' 
-        };
+        player.x = Math.max(130, canvas.width * 0.38);
 
-        function getGroundY() {
-            return canvas.height - 40; 
+        player.y = getGroundY() - player.height;
+
+        player.dy = 0;
+
+        player.isGrounded = true;
+
+        document.getElementById('score').innerText = score;
+    }
+
+    function startGame() {
+
+        setScreen('PLAYING');
+
+        initGame();
+
+        if(animationId) cancelAnimationFrame(animationId);
+
+        gameLoop();
+    }
+
+    function pauseGame() {
+
+        if (gameState === 'PLAYING') {
+
+            setScreen('PAUSED');
         }
+    }
 
-        // قفز أبو حرير
-        function jump(e) {
-            if (e && (e.type === 'touchstart' || e.type === 'mousedown')) {
-                // التأكد من عدم الضغط على الأزرار العلوية بالخطأ
-                if (e.target.closest('#pauseBtn') || e.target.closest('.controls') || !document.getElementById('missions-modal').classList.contains('hidden') || !document.getElementById('contact-modal').classList.contains('hidden')) {
-                    return;
-                }
-            }
+    function resumeGame() {
 
-            if (gameState === 'PLAYING' && player.isGrounded) {
-                if (e && e.cancelable) e.preventDefault();
-                player.dy = player.jumpPower;
-                player.isGrounded = false;
-            }
-        }
+        if (gameState === 'PAUSED') {
 
-        // مستمعو الأحداث
-        canvas.addEventListener('touchstart', jump, {passive: false});
-        canvas.addEventListener('mousedown', jump);
-        window.addEventListener('keydown', (e) => { 
-            if (e.code === 'Space' || e.code === 'ArrowUp') {
-                e.preventDefault(); 
-                jump(); 
-            }
-        });
-
-        // إدارة حالات الشاشات
-        function setScreen(state) {
-            gameState = state;
-            document.getElementById('start-screen').classList.add('hidden');
-            document.getElementById('pause-screen').classList.add('hidden');
-            document.getElementById('game-over-screen').classList.add('hidden');
-            
-            if (state === 'START') {
-                document.getElementById('start-screen').classList.remove('hidden');
-            } else if (state === 'PAUSED') {
-                document.getElementById('pause-screen').classList.remove('hidden');
-            } else if (state === 'GAMEOVER') {
-                document.getElementById('game-over-screen').classList.remove('hidden');
-                document.getElementById('final-score').innerText = score;
-            }
-        }
-
-        function initGame() {
-            resizeCanvas();
-            score = 0;
-            frame = 0;
-            // تم تقليل السرعة الابتدائية من 4.2 إلى 2.8
-            gameSpeed = 2.8 + (canvas.width / 1400); 
-            obstacles = [];
-            stars = [];
-            
-            // تحديد مكان أبو حرير ليكون أبعد ومثالي
-            player.x = Math.max(130, canvas.width * 0.38);
-            player.y = getGroundY() - player.height;
-            player.dy = 0;
-            player.isGrounded = true;
-            
-            document.getElementById('score').innerText = score;
-        }
-
-        function startGame() {
             setScreen('PLAYING');
-            initGame();
-            if(animationId) cancelAnimationFrame(animationId);
+
             gameLoop();
         }
+    }
 
-        function pauseGame() {
-            if (gameState === 'PLAYING') {
-                setScreen('PAUSED');
+    function gameOver() {
+
+        setScreen('GAMEOVER');
+
+        // إعلان عند الخسارة
+        showAd();
+    }
+
+    function spawnObstacle() {
+
+        const types = ['🪑','🗑️','🍔','🔥'];
+
+        let size = Math.random() * 10 + 35;
+
+        obstacles.push({
+            x: canvas.width + 50,
+            y: getGroundY() - size + 5,
+            width: size,
+            height: size,
+            emoji: types[Math.floor(Math.random() * types.length)]
+        });
+    }
+
+    function spawnStar() {
+
+        stars.push({
+            x: canvas.width + 50,
+            y: getGroundY() - Math.random() * 90 - 50,
+            width: 28,
+            height: 28,
+            emoji: '⭐'
+        });
+    }
+
+    function update() {
+
+        if (gameState !== 'PLAYING') return;
+
+        const groundY = getGroundY();
+
+        player.dy += player.gravity;
+
+        player.y += player.dy;
+
+        if (player.y + player.height >= groundY) {
+
+            player.y = groundY - player.height;
+
+            player.isGrounded = true;
+
+            player.dy = 0;
+        }
+
+        chaser.y = groundY - chaser.height;
+
+        let spawnRate = Math.max(70, 120 - Math.floor(score * 2.5));
+
+        if (frame % spawnRate === 0) spawnObstacle();
+
+        if (frame % 140 === 0) spawnStar();
+
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+
+            let obs = obstacles[i];
+
+            obs.x -= gameSpeed;
+
+            if (
+                player.x < obs.x + obs.width &&
+                player.x + player.width > obs.x &&
+                player.y < obs.y + obs.height &&
+                player.y + player.height > obs.y
+            ) {
+
+                gameOver();
+            }
+
+            if (obs.x + obs.width < -50) {
+
+                obstacles.splice(i,1);
             }
         }
 
-        function resumeGame() {
-            if (gameState === 'PAUSED') {
-                setScreen('PLAYING');
-                gameLoop();
-            }
-        }
+        for (let i = stars.length - 1; i >= 0; i--) {
 
-        function gameOver() {
-            // إيقاف اللعبة مؤقتاً لعرض الإعلان قبل شاشة الخسارة
-            gameState = 'WAITING_AD'; 
-            showAdThen(() => {
-                setScreen('GAMEOVER');
-            });
-        }
+            let star = stars[i];
 
-        function spawnObstacle() {
-            const types = ['🪑', '🗑️', '🍔', '🔥'];
-            let size = Math.random() * 10 + 35; 
-            obstacles.push({
-                x: canvas.width + 50,
-                y: getGroundY() - size + 5, 
-                width: size, 
-                height: size,
-                emoji: types[Math.floor(Math.random() * types.length)]
-            });
-        }
+            star.x -= gameSpeed;
 
-        function spawnStar() {
-            stars.push({
-                x: canvas.width + 50,
-                y: getGroundY() - Math.random() * 90 - 50, 
-                width: 28, 
-                height: 28,
-                emoji: '⭐'
-            });
-        }
+            if (
+                player.x < star.x + star.width &&
+                player.x + player.width > star.x &&
+                player.y < star.y + star.height &&
+                player.y + player.height > star.y
+            ) {
 
-        function update() {
-            if (gameState !== 'PLAYING') return;
+                score++;
 
-            const groundY = getGroundY();
+                document.getElementById('score').innerText = score;
 
-            // فيزياء اللاعب
-            player.dy += player.gravity;
-            player.y += player.dy;
+                stars.splice(i,1);
 
-            // اصطدام اللاعب بالأرض
-            if (player.y + player.height >= groundY) {
-                player.y = groundY - player.height;
-                player.isGrounded = true;
-                player.dy = 0;
-            }
+                if (score % 5 === 0) {
 
-            // حركة الطباخ
-            chaser.y = groundY - chaser.height - (frame % 16 < 8 ? 5 : 0);
-
-            // تم إبطاء معدل ظهور العقبات لتناسب السرعة الجديدة
-            let spawnRate = Math.max(90, 150 - Math.floor(score * 2.0));
-            if (frame % spawnRate === 0) spawnObstacle();
-            
-            if (frame % 140 === 0 && Math.random() > 0.2) spawnStar();
-
-            // تحديث العقبات والتصادم
-            for (let i = obstacles.length - 1; i >= 0; i--) {
-                let obs = obstacles[i];
-                obs.x -= gameSpeed;
-
-                let hitPadding = 12; 
-                if (player.x + hitPadding < obs.x + obs.width - hitPadding &&
-                    player.x + player.width - hitPadding > obs.x + hitPadding &&
-                    player.y + hitPadding < obs.y + obs.height - hitPadding &&
-                    player.y + player.height - hitPadding > obs.y + hitPadding) {
-                    gameOver(); // هنا سيتم استدعاء دالة الخسارة التي تعرض الإعلان أولاً
+                    gameSpeed += 0.35;
                 }
 
-                if (obs.x + obs.width < -50) obstacles.splice(i, 1);
-            }
+            } else if (star.x + star.width < -50) {
 
-            // تحديث النجوم
-            for (let i = stars.length - 1; i >= 0; i--) {
-                let star = stars[i];
-                star.x -= gameSpeed;
-
-                let hitPadding = 4;
-                if (player.x < star.x + star.width - hitPadding &&
-                    player.x + player.width > star.x + hitPadding &&
-                    player.y < star.y + star.height - hitPadding &&
-                    player.y + player.height > star.y + hitPadding) {
-                    
-                    score += 1;
-                    document.getElementById('score').innerText = score;
-                    stars.splice(i, 1); 
-                    
-                    // تم تقليل مقدار زيادة السرعة من 0.35 إلى 0.15 لكي لا تسرع اللعبة بشكل مفاجئ
-                    if(score % 5 === 0) gameSpeed += 0.15; 
-                    
-                } else if (star.x + star.width < -50) {
-                    stars.splice(i, 1);
-                }
-            }
-
-            frame++;
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const groundY = getGroundY();
-
-            // رسم الأرضية والشارع
-            ctx.fillStyle = '#170a00';
-            ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
-            
-            ctx.fillStyle = '#ff5500';
-            ctx.fillRect(0, groundY, canvas.width, 4);
-
-            // خطوط الشارع المتحركة
-            ctx.fillStyle = '#421d00';
-            for(let i = 0; i < canvas.width + 100; i += 50){
-                let lineX = i - ((frame * gameSpeed) % 50);
-                ctx.fillRect(lineX, groundY + 12, 22, 6);
-            }
-
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-
-            // 1. رسم الطباخ الغاضب بالخلف
-            ctx.font = `${chaser.width}px Arial`;
-            ctx.save();
-            ctx.translate(chaser.x + chaser.width/2, chaser.y + chaser.height/2);
-            ctx.rotate(Math.sin(frame * 0.15) * 0.08); 
-            ctx.fillText(chaser.emoji, 0, 0);
-            ctx.restore();
-
-            // رسم ساطور صغير يطير خلف أبو حرير
-            ctx.font = '26px Arial';
-            ctx.save();
-            ctx.translate(chaser.x + chaser.width + 10, chaser.y + chaser.height/2 - 10);
-            ctx.rotate(frame * 0.12); 
-            ctx.fillText('🔪', 0, 0);
-            ctx.restore();
-
-            // 2. رسم أبو حرير وهو يركض بالاتجاه الصحيح (إلى اليمين)
-            ctx.font = `${player.width}px Arial`;
-            ctx.save();
-            ctx.translate(player.x + player.width/2, player.y + player.height/2);
-            ctx.scale(-1, 1);
-            
-            if(!player.isGrounded && player.dy < 0) {
-                ctx.rotate(0.2); 
-            } else if(player.isGrounded) {
-                ctx.rotate(-Math.sin(frame * 0.4) * 0.12); 
-            }
-            
-            ctx.fillText(player.emoji, 0, 0);
-            ctx.restore();
-
-            // 3. رسم العقبات
-            for (let obs of obstacles) {
-                ctx.save();
-                ctx.translate(obs.x + obs.width/2, obs.y + obs.height/2);
-                ctx.font = `${obs.width}px Arial`;
-                ctx.fillText(obs.emoji, 0, 0);
-                ctx.restore();
-            }
-
-            // 4. رسم النجوم
-            for (let star of stars) {
-                ctx.save();
-                ctx.translate(star.x + star.width/2, star.y + star.height/2);
-                ctx.rotate(Math.sin(frame * 0.08) * 0.3);
-                ctx.font = `${star.width}px Arial`;
-                ctx.fillText(star.emoji, 0, 0);
-                ctx.restore();
+                stars.splice(i,1);
             }
         }
 
-        function gameLoop() {
-            if (gameState === 'PLAYING') {
-                update();
-                draw();
-                animationId = requestAnimationFrame(gameLoop);
-            }
+        frame++;
+    }
+
+    function draw() {
+
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        const groundY = getGroundY();
+
+        ctx.fillStyle = '#170a00';
+
+        ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
+
+        ctx.fillStyle = '#ff5500';
+
+        ctx.fillRect(0, groundY, canvas.width, 4);
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.font = `${chaser.width}px Arial`;
+
+        ctx.fillText(
+            chaser.emoji,
+            chaser.x + chaser.width/2,
+            chaser.y + chaser.height/2
+        );
+
+        ctx.font = `${player.width}px Arial`;
+
+        ctx.fillText(
+            player.emoji,
+            player.x + player.width/2,
+            player.y + player.height/2
+        );
+
+        for (let obs of obstacles) {
+
+            ctx.font = `${obs.width}px Arial`;
+
+            ctx.fillText(
+                obs.emoji,
+                obs.x + obs.width/2,
+                obs.y + obs.height/2
+            );
         }
 
-        // --- نظام النوافذ المنبثقة المرن مع الإيقاف والاستئناف وعرض الإعلانات ---
-        
-        document.getElementById('startBtn').addEventListener('click', startGame);
-        document.getElementById('restartBtn').addEventListener('click', startGame);
-        document.getElementById('resumeBtn').addEventListener('click', resumeGame);
-        document.getElementById('restartFromPauseBtn').addEventListener('click', startGame);
-        document.getElementById('pauseBtn').addEventListener('click', () => {
-            if (gameState === 'PLAYING') {
-                pauseGame();
-            }
-        });
+        for (let star of stars) {
 
-        const backdrop = document.getElementById('modal-backdrop');
-        
-        function openModal(id) {
-            pauseGame(); 
-            // عرض الإعلان قبل فتح نافذة المهمات أو التواصل
-            showAdThen(() => {
-                document.getElementById(id).classList.remove('hidden');
-                backdrop.classList.remove('hidden');
-            });
+            ctx.font = `${star.width}px Arial`;
+
+            ctx.fillText(
+                star.emoji,
+                star.x + star.width/2,
+                star.y + star.height/2
+            );
         }
+    }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-            backdrop.classList.add('hidden');
-        }
+    function gameLoop() {
 
-        document.getElementById('missionsBtn').addEventListener('click', () => openModal('missions-modal'));
-        document.getElementById('contactBtn').addEventListener('click', () => openModal('contact-modal'));
+        if (gameState === 'PLAYING') {
 
-        document.querySelectorAll('.close-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                closeModal(this.getAttribute('data-target'));
-            });
-        });
+            update();
 
-        backdrop.addEventListener('click', () => {
-            document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
-            backdrop.classList.add('hidden');
-        });
-
-        // تهيئة العرض الأولي
-        setTimeout(() => {
-            initGame();
             draw();
-        }, 150);
 
-    </script>
+            animationId = requestAnimationFrame(gameLoop);
+        }
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startGame);
+
+    document.getElementById('restartBtn').addEventListener('click', startGame);
+
+    document.getElementById('resumeBtn').addEventListener('click', resumeGame);
+
+    document.getElementById('restartFromPauseBtn').addEventListener('click', startGame);
+
+    document.getElementById('pauseBtn').addEventListener('click', pauseGame);
+
+    const backdrop = document.getElementById('modal-backdrop');
+
+    function openModal(id) {
+
+        pauseGame();
+
+        document.getElementById(id).classList.remove('hidden');
+
+        backdrop.classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+
+        document.getElementById(id).classList.add('hidden');
+
+        backdrop.classList.add('hidden');
+    }
+
+    // ===== إعلان عند فتح المهمات =====
+    document.getElementById('missionsBtn').addEventListener('click', () => {
+
+        showAd(() => {
+
+            openModal('missions-modal');
+        });
+
+    });
+
+    // ===== إعلان عند فتح التواصل =====
+    document.getElementById('contactBtn').addEventListener('click', () => {
+
+        showAd(() => {
+
+            openModal('contact-modal');
+        });
+
+    });
+
+    document.querySelectorAll('.close-btn').forEach(btn => {
+
+        btn.addEventListener('click', function() {
+
+            closeModal(this.getAttribute('data-target'));
+        });
+
+    });
+
+    backdrop.addEventListener('click', () => {
+
+        document.querySelectorAll('.modal').forEach(m => {
+
+            m.classList.add('hidden');
+        });
+
+        backdrop.classList.add('hidden');
+    });
+
+    setTimeout(() => {
+
+        initGame();
+
+        draw();
+
+    }, 150);
+
+</script>
+
 </body>
 </html>
