@@ -67,20 +67,6 @@ body{
     100%{background-position:300% 50%;}
 }
 
-@keyframes pop{
-
-0%{
-transform:scale(.7);
-opacity:0;
-}
-
-100%{
-transform:scale(1);
-opacity:1;
-}
-
-}
-
 .header h1{
     margin-top:10px;
     color:#ff9900;
@@ -284,73 +270,17 @@ canvas{
 
 <div id="start-screen" class="ui-overlay">
 
-<div style="
-background:white;
-color:black;
-padding:20px;
-border-radius:22px;
-width:92%;
-max-width:340px;
-box-shadow:0 0 25px rgba(0,0,0,.45);
-line-height:2;
-font-weight:bold;
-animation:pop .5s ease;
-">
+<h2 style="color:#ff9900;font-size:28px;">
+راعي المطعم يلحقك!
+</h2>
 
-<div style="
-font-size:24px;
-text-align:center;
-font-weight:900;
-">
-🎉 أهلاً وسهلاً !!
-</div>
+<p style="margin-top:10px;color:#eee;line-height:1.7;">
+اقفز فوق المطبات والكراسي والأكل الفاسد واجمع النجوم!
+</p>
 
-<div style="
-margin-top:10px;
-text-align:center;
-font-size:18px;
-color:#ff6600;
-">
-🎪 مرحباً بك في بوت أبو حرير
-</div>
-
-<div style="
-margin-top:16px;
-font-size:16px;
-">
-🎊 افتح عجلة الحظ واربح جوائز يومياً
-</div>
-
-<div style="font-size:16px;">
-💰 اجمع الأرباح وقم بسحبها
-</div>
-
-<div style="font-size:16px;">
-🎁 أكمل المهام واحصل على مكافآت
-</div>
-
-<div style="
-margin-top:15px;
-text-align:center;
-color:#666;
-font-size:14px;
-">
-👇 اضغط الزر للبدء
-</div>
-
-<button class="btn-main" id="startBtn" style="
-margin-top:18px;
-width:100%;
-max-width:none;
-font-size:22px;
-padding:16px;
-border-radius:16px;
-box-shadow:0 0 18px rgba(255,140,0,.5);
-">
-🎪 افتح عجلة الحظ
+<button class="btn-main" id="startBtn">
+ابدأ اللعب 🏃‍♂️
 </button>
-
-</div>
 
 </div>
 
@@ -511,6 +441,7 @@ const player = {
 
     gravity:0.55,
 
+    /* 🔥 قفزة أعلى */
     jumpPower:-11,
 
     isGrounded:false,
@@ -530,6 +461,7 @@ function getGroundY(){
     return canvas.height - 40;
 }
 
+/* 🔥 قفزة أفضل */
 function jump(){
 
     if(gameState === 'PLAYING' && player.isGrounded){
@@ -659,6 +591,7 @@ function spawnObstacle(){
 
     const types = ['🪑','🗑️','🍔','🔥'];
 
+    /* 🔥 مطبات أصغر شوي */
     let size = Math.random()*8 + 28;
 
     obstacles.push({
@@ -730,6 +663,8 @@ function update(){
     if(frame % 150 === 0){
         spawnStar();
     }
+
+    /* 🔥 تصادم أرحم */
 
     for(let i = obstacles.length - 1; i >= 0; i--){
 
@@ -818,6 +753,8 @@ function draw(){
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
+    /* الطباخ */
+
     ctx.save();
 
     ctx.translate(
@@ -833,6 +770,8 @@ function draw(){
 
     ctx.restore();
 
+    /* اللاعب */
+
     ctx.save();
 
     ctx.translate(
@@ -842,6 +781,7 @@ function draw(){
 
     ctx.scale(-1,1);
 
+    /* 🔥 حركة ركض */
     ctx.rotate(Math.sin(frame * 0.22) * 0.10);
 
     ctx.font = `${player.width}px Arial`;
@@ -849,6 +789,8 @@ function draw(){
     ctx.fillText(player.emoji,0,0);
 
     ctx.restore();
+
+    /* المطبات */
 
     for(let obs of obstacles){
 
@@ -868,6 +810,8 @@ function draw(){
         ctx.restore();
 
     }
+
+    /* النجوم */
 
     for(let star of stars){
 
