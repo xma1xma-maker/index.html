@@ -8,7 +8,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
 
-<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<!-- <script src="https://sad.adsgram.ai/js/sad.min.js"></script> -->
 
 <style>
 
@@ -245,6 +245,19 @@ canvas{
     font-weight:bold;
 }
 
+.ads-disabled-badge {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #ff6600;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    z-index: 50;
+    font-weight: bold;
+}
+
 </style>
 </head>
 
@@ -379,24 +392,23 @@ canvas{
 
 </div>
 
+<div class="ads-disabled-badge">
+🔕 الإعلانات معطلة مؤقتاً
+</div>
+
 <script>
 
-/* ADSGRAM */
-
+/* ADSGRAM - معطل مؤقتاً */
+/*
 const AdController = window.Adsgram.init({
     blockId: "int-33446"
 });
+*/
 
 function showAd(callback=null){
-
-    AdController.show()
-    .then(() => {
-        if(callback) callback();
-    })
-    .catch(() => {
-        if(callback) callback();
-    });
-
+    // ✅ تنفيذ الـ callback مباشرة دون عرض إعلانات
+    console.log('🔕 الإعلانات معطلة مؤقتاً');
+    if(callback) callback();
 }
 
 /* GAME */
